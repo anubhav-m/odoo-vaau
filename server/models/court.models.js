@@ -8,6 +8,7 @@ const courtSchema = new mongoose.Schema({
     },
     name: {
         type: String,
+        unique: true,
         required: [true, 'Court name is required'],
         minLength: [2, 'Minimum length is 2 characters'],
         maxLength: [50, 'Maximum length is 50 characters']

@@ -38,8 +38,7 @@ const facilitySchema = new mongoose.Schema({
         enum: ['pending', 'approved', 'rejected'],
         default: 'pending'
     },
-    courts:
-    {
+    courts:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Court'
     }

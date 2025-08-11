@@ -4,7 +4,8 @@ import {
     createCourt,
     getCourts,
     updateCourt,
-    deleteCourt
+    deleteCourt,
+    getCourtsByOwner
 } from '../controllers/court.controllers.js';
 
 export const courtRouter = express.Router();
@@ -20,3 +21,6 @@ courtRouter.put('/updatecourt/:courtId', authorize, updateCourt);
 
 // Delete court
 courtRouter.delete('/deletecourt/:courtId', authorize, deleteCourt);
+
+
+courtRouter.get('/getCourtsByOwner', getCourtsByOwner);

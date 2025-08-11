@@ -69,6 +69,32 @@ export const getCourts = async (req, res, next) => {
     }
 };
 
+export const getCourtsByOwner = async (req, res, next) => {
+  try {
+    const ownerId = req.query.ownerId;
+    if (!ownerId) {
+      return res.status(400).json({ success: false, message: "Owner ID is required" });
+    }
+
+    // Find all facilities owned by this user
+    const facilities = await Facility.find({ ownerId }).select('_id');
+    const facilityIds = facilities.map(f => f._id);
+
+    // Find courts where facilityId in facilityIds
+    const courts = await Court.find({ facilityId: { $in: facilityIds } })
+      .populate('facilityId', 'name location sports')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      courts,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 // UPDATE COURT
 export const updateCourt = async (req, res, next) => {
     try {
