@@ -6,7 +6,7 @@ import TiltedCard from "../components/TiltedCard";
 export default function Home() {
   const [facilities, setFacilities] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const cardsPerPage = 4; // Number of cards visible at once
+  const cardsPerPage = 4;
 
   useEffect(() => {
     const fetchFacilities = async () => {
@@ -29,7 +29,6 @@ export default function Home() {
     fetchFacilities();
   }, []);
 
-  // Navigation
   const nextSlide = () => {
     setCurrentIndex((prev) =>
       prev + cardsPerPage < facilities.length ? prev + cardsPerPage : 0
@@ -51,10 +50,8 @@ export default function Home() {
 
   return (
     <div className="flex-1">
-      {/* Top Section */}
       <div className="flex flex-col gap-6 p-4 lg:p-24 max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row gap-6 justify-center my-10">
-          {/* Left Card */}
           <div className="w-full sm:w-1/2 flex justify-center items-center">
             <TiltedCard
               containerHeight="300px"
@@ -85,8 +82,6 @@ export default function Home() {
               }
             />
           </div>
-
-          {/* Right Info Section */}
           <div
             className="w-full sm:w-1/2 min-h-[400px] rounded-2xl shadow-lg border-4 border-teal-500 
                        bg-gray-200 dark:bg-gray-800 flex-col justify-center items-center 
@@ -104,7 +99,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Facilities Section */}
       <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7">
         {facilities.length > 0 && (
           <div className="flex flex-col gap-6">
@@ -113,14 +107,13 @@ export default function Home() {
             </h2>
             <div className="flex justify-end w-full">
               <Link
-                to="/facilities"
+                to="/search"
                 className="mt-5 text-xs sm:text-sm font-bold text-teal-500 hover:underline"
               >
                 See all venues
               </Link>
             </div>
 
-            {/* Cards */}
             <div className="flex gap-y-6 gap-x-2 justify-center">
               {currentFacilities.map((facility) =>
                 facility && facility._id ? (
@@ -129,7 +122,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Carousel Arrows */}
             {facilities.length > cardsPerPage && (
               <div className="flex justify-center gap-4 mt-6">
                 <button
@@ -149,7 +141,6 @@ export default function Home() {
           </div>
         )}
       </div>
-      {/* Popular Sports Section */}
       <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7">
         <h2 className="text-2xl font-semibold">Popular Sports</h2>
         <div className="flex flex-wrap gap-6 justify-center">
@@ -170,12 +161,13 @@ export default function Home() {
                 alt={sport.name}
                 className="w-full h-44 object-cover"
               />
-              <div className="p-2 text-center text-sm font-medium">{sport.name}</div>
+              <div className="p-2 text-center text-sm font-medium">
+                {sport.name}
+              </div>
             </div>
           ))}
         </div>
       </div>
-
     </div>
   );
 }
