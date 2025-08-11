@@ -48,7 +48,7 @@ export default function Home() {
                         p-8 text-gray-800 dark:text-gray-200"
                 >
                   <span className="text-red-500 text-2xl mb-2">📍</span>
-                  <span className="mb-4">Location</span>
+                  <span className="mb-4">Ahmedabad</span>
 
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center">
                     FIND PLAYERS & VENUES NEARBY
@@ -88,6 +88,15 @@ export default function Home() {
             <h2 className="text-2xl font-semibold text-center">
               Featured Facilities
             </h2>
+            <div className="flex justify-end w-full">
+            <Link
+              to="/facilities"
+              className="mt-5 text-xs sm:text-sm font-bold text-teal-500 hover:underline"
+            >
+              See all venues
+            </Link>
+            </div>
+            
             <div className="flex flex-wrap gap-y-6 gap-x-2 justify-center">
               {facilities.map((facility) =>
                 facility && facility._id ? (
@@ -95,12 +104,6 @@ export default function Home() {
                 ) : null
               )}
             </div>
-            <Link
-              to="/facilities"
-              className="mt-5 text-xs sm:text-sm text-teal-500 font-bold hover:underline"
-            >
-              View all facilities
-            </Link>
           </div>
         )}
       </div>
