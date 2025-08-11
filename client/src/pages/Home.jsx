@@ -121,7 +121,7 @@ export default function Home() {
             </div>
 
             {/* Cards */}
-            <div className="flex max-h-5flex-wrap gap-y-6 gap-x-2 justify-center">
+            <div className="flex gap-y-6 gap-x-2 justify-center">
               {currentFacilities.map((facility) =>
                 facility && facility._id ? (
                   <FacilityCard key={facility._id} facility={facility} />
