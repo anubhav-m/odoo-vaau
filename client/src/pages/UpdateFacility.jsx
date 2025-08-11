@@ -21,7 +21,39 @@ export default function UpdateFacilityPage() {
   const [images, setImages] = useState([]);
   const [newImage, setNewImage] = useState("");
 
-  // Auto carousel
+  // Fetch facility function to reuse
+  const fetchFacility = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `/api/facility/getfacilities?slug=${facilitySlug}`
+      );
+      const data = await res.json();
+
+      if (!data.success) throw new Error("Cannot fetch this facility");
+
+      setFacility(data.facility);
+      setName(data.facility.name);
+      setLocation(data.facility.location);
+      setSports(data.facility.sports || []);
+      setAmenities(data.facility.amenities || []);
+      setDescription(data.facility.description || "");
+      setImages(data.facility.images || []);
+
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial fetch on component mount or when slug changes
+  useEffect(() => {
+    fetchFacility();
+  }, [facilitySlug]);
+
+  // Auto carousel for images
   useEffect(() => {
     if (images && images.length > 0) {
       const interval = setInterval(() => {
@@ -30,34 +62,6 @@ export default function UpdateFacilityPage() {
       return () => clearInterval(interval);
     }
   }, [images]);
-
-  // Fetch facility
-  useEffect(() => {
-    const fetchFacility = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/facility/getfacilities?slug=${facilitySlug}`);
-        const data = await res.json();
-
-        if (!data.success) throw new Error("Cannot fetch this facility");
-
-        setFacility(data.facility);
-        setName(data.facility.name);
-        setLocation(data.facility.location);
-        setSports(data.facility.sports || []);
-        setAmenities(data.facility.amenities || []);
-        setDescription(data.facility.description || "");
-        setImages(data.facility.images || []);
-
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchFacility();
-  }, [facilitySlug]);
 
   const addImage = () => {
     if (newImage.trim()) {
@@ -88,7 +92,11 @@ export default function UpdateFacilityPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Update failed");
 
-      navigate(`/facility/${facilitySlug}`);
+      // Refetch updated facility data to sync local state
+      await fetchFacility();
+
+      // Optional: navigate back to facility details page after update
+      // navigate(`/facility/${facilitySlug}`);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -126,27 +134,35 @@ export default function UpdateFacilityPage() {
             {/* Sports */}
             <div className="flex justify-center gap-2 my-3">
               {sports.map((sport, idx) => (
-                <Badge key={idx} color="info">{sport}</Badge>
+                <Badge key={idx} color="info">
+                  {sport}
+                </Badge>
               ))}
             </div>
             <input
               type="text"
               className="border p-2 rounded mx-auto"
               value={sports.join(", ")}
-              onChange={(e) => setSports(e.target.value.split(",").map(s => s.trim()))}
+              onChange={(e) =>
+                setSports(e.target.value.split(",").map((s) => s.trim()))
+              }
             />
 
             {/* Amenities */}
             <div className="flex justify-center gap-2 flex-wrap my-3">
               {amenities.map((amenity, idx) => (
-                <Badge key={idx} color="success">{amenity}</Badge>
+                <Badge key={idx} color="success">
+                  {amenity}
+                </Badge>
               ))}
             </div>
             <input
               type="text"
               className="border p-2 rounded mx-auto"
               value={amenities.join(", ")}
-              onChange={(e) => setAmenities(e.target.value.split(",").map(a => a.trim()))}
+              onChange={(e) =>
+                setAmenities(e.target.value.split(",").map((a) => a.trim()))
+              }
             />
 
             {/* Carousel */}
@@ -158,14 +174,18 @@ export default function UpdateFacilityPage() {
                       key={idx}
                       src={photo}
                       alt={`${name} ${idx + 1}`}
-                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${idx === currentIndex ? "opacity-100" : "opacity-0"}`}
+                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                        idx === currentIndex ? "opacity-100" : "opacity-0"
+                      }`}
                     />
                   ))}
 
                   {/* Prev button */}
                   <button
                     onClick={() =>
-                      setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+                      setCurrentIndex(
+                        (prev) => (prev - 1 + images.length) % images.length
+                      )
                     }
                     className="absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black rounded-full p-2 shadow-lg hover:bg-gray-300 transition"
                   >
@@ -188,7 +208,9 @@ export default function UpdateFacilityPage() {
                       <button
                         key={idx}
                         onClick={() => setCurrentIndex(idx)}
-                        className={`w-3 h-3 rounded-full ${idx === currentIndex ? "bg-white" : "bg-gray-400"}`}
+                        className={`w-3 h-3 rounded-full ${
+                          idx === currentIndex ? "bg-white" : "bg-gray-400"
+                        }`}
                       />
                     ))}
                   </div>

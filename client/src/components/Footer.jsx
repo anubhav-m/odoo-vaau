@@ -20,7 +20,7 @@ export default function FooterComp() {
                                 <FooterLink as={Link} to="/about" target="_blank" rel="noopener noreferer">
                                     About the project
                                 </FooterLink>
-                                <FooterLink href="https://github.com/anubhav-m" target="_blank" rel="noopener noreferer">
+                                <FooterLink href="https://github.com/anubhav-m/odoo-vaau" target="_blank" rel="noopener noreferer">
                                     About the creator
                                 </FooterLink>
                             </FooterLinkGroup>
@@ -29,7 +29,7 @@ export default function FooterComp() {
                         <div>
                             <FooterTitle title='Follow Us' />
                             <FooterLinkGroup col>
-                                <FooterLink href="https://github.com/anubhav-m/node-notion" target="_blank" rel="noopener noreferer">
+                                <FooterLink href="https://github.com/anubhav-m/odoo-vaau" target="_blank" rel="noopener noreferer">
                                     Github
                                 </FooterLink>
                             </FooterLinkGroup>
@@ -52,8 +52,8 @@ export default function FooterComp() {
 
             <FooterDivider />
             <FooterCopyright
-                href="https://github.com/anubhav-m"
-                by='Made with ❤ by Anubhav Mishra'
+                href="https://github.com/anubhav-m/odoo-vaau"
+                by='Made with ❤ by V.A.A.U'
                 year={new Date().getFullYear()}
             />
         </Footer>
