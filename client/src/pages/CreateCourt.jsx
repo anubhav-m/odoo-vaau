@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Label, Select, TextInput, Button } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateCourt() {
     const [facilities, setFacilities] = useState([]);
@@ -8,6 +9,9 @@ export default function CreateCourt() {
     const [pricePerHour, setPricePerHour] = useState("");
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
+    const [courtName, setCourtName] = useState("");
+    const navigate = useNavigate();
+
 
     // Fetch facilities from backend
     useEffect(() => {
@@ -29,17 +33,38 @@ export default function CreateCourt() {
         return facility.sports?.filter((sport) => !usedSports.includes(sport)) || [];
     })();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const payload = {
             facilityId: selectedFacility,
+            name: courtName.trim(),
             sportType: selectedSport,
             pricePerHour,
             operatingHours: { start: startTime, end: endTime },
         };
-        console.log("Submitting court:", payload);
-        // fetch POST to /api/court/create
+
+        try {
+            const res = await fetch("/api/court/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                console.log("Court created:", data);
+                navigate(`/court/${data.court._id}`);
+            } else {
+                console.error("Error creating court:", data.message);
+                alert(data.message || "Failed to create court");
+            }
+        } catch (err) {
+            console.error("Error creating court:", err);
+            alert("An error occurred while creating court");
+        }
     };
+
 
     const timeOptions = Array.from({ length: 24 }, (_, hour) =>
         `${hour.toString().padStart(2, "0")}:00`
@@ -96,6 +121,19 @@ export default function CreateCourt() {
                         </Select>
                     </div>
                 )}
+
+                {/* Court Name */}
+                <div>
+                    <Label htmlFor="courtName" value="Court Name" />
+                    <TextInput
+                        id="courtName"
+                        type="text"
+                        value={courtName}
+                        onChange={(e) => setCourtName(e.target.value)}
+                        required
+                    />
+                </div>
+
 
                 {/* Pricing */}
                 <div>

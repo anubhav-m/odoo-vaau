@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser'
 import { userRouter } from './routes/user.routes.js'
 import { facilityRouter } from './routes/facility.routes.js'
 import { commentRouter } from './routes/comment.routes.js'
+import { courtRouter } from './routes/court.routes.js'
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/facility', facilityRouter);
 app.use('/api/comment', commentRouter);
+app.use('/api/court', courtRouter)
 
 app.use(errorMiddleware);
 
