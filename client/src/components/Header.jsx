@@ -12,18 +12,9 @@ export default function Header() {
     const { currentUser } = useSelector(state => state.user);
     const { theme } = useSelector(state => state.theme);
     const dispatch = useDispatch();
-    const [serachTerm, setSearchTerm] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const urlParams = new URLSearchParams(location.search);
-        const searchTermFromUrl = urlParams.get('searchTerm');
-        if (searchTermFromUrl) {
-            setSearchTerm(searchTermFromUrl);
-        }
-
-    }, [location.search]);
 
     const handleSignOut = async () => {
         try {
@@ -47,13 +38,6 @@ export default function Header() {
         }
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const urlParams = new URLSearchParams(location.search);
-        urlParams.set('searchTerm', serachTerm);
-        const searchQuery = urlParams.toString();
-        navigate(`/search?${searchQuery}`);
-    }
 
     return (
         <Navbar>
@@ -62,16 +46,6 @@ export default function Header() {
                 Court
             </Link>
 
-            <form onSubmit={handleSubmit}>
-                <TextInput
-                    type='text'
-                    placeholder='Search...'
-                    rightIcon={AiOutlineSearch}
-                    className='hidden lg:inline'
-                    value={serachTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </form>
 
             <Button className='w-14 h-10 lg:hidden' color="light" pill>
                 <AiOutlineSearch />
