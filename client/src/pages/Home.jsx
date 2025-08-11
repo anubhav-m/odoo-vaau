@@ -149,6 +149,33 @@ export default function Home() {
           </div>
         )}
       </div>
+      {/* Popular Sports Section */}
+      <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7">
+        <h2 className="text-2xl font-semibold">Popular Sports</h2>
+        <div className="flex flex-wrap gap-6 justify-center">
+          {[
+            { name: "Badminton", image: "/images/badminton.jpg" },
+            { name: "Football", image: "/images/football.jpg" },
+            { name: "Cricket", image: "/images/cricket.jpg" },
+            { name: "Swimming", image: "/images/swimming.jpg" },
+            { name: "Tennis", image: "/images/tennis.jpg" },
+            { name: "Table Tennis", image: "/images/tabletennis.jpg" },
+          ].map((sport, index) => (
+            <div
+              key={index}
+              className="w-40 h-56 rounded-xl shadow-lg overflow-hidden bg-gray-100 dark:bg-gray-800 hover:scale-105 transition-transform cursor-pointer"
+            >
+              <img
+                src={sport.image}
+                alt={sport.name}
+                className="w-full h-44 object-cover"
+              />
+              <div className="p-2 text-center text-sm font-medium">{sport.name}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 }
