@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function FacilityCard({ facility }) {
   return (
-    <div className="group relative w-full border border-teal-500 hover:border-2 h-[400px] overflow-hidden rounded-lg sm:w-[370px] transition-all">
+    <div className="group relative w-full border border-teal-500 hover:border-2 h-[400px] overflow-hidden rounded-lg sm:w-[20vw] transition-all">
       <Link to={`/facility/${facility._id}`}>
         <img
           src={facility.images[0] || "/default-facility.jpg"}
