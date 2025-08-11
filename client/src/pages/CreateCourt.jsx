@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Label, Select, TextInput, Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function CreateCourt() {
     const [facilities, setFacilities] = useState([]);
@@ -10,19 +11,19 @@ export default function CreateCourt() {
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [courtName, setCourtName] = useState("");
+    const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
 
 
     // Fetch facilities from backend
     useEffect(() => {
-        fetch("/api/facility/getFacilities?limit=100")
-            .then((res) => res.json())
-            .then((data) => {
+        fetch(`/api/facility/getFacilitiesByUser?userId=${currentUser._id}`)
+            .then(res => res.json())
+            .then(data => {
                 if (data.success) {
-                    setFacilities(data.facilities || []);
+                    setFacilities(data.facilities);
                 }
-            })
-            .catch((err) => console.error("Error fetching facilities:", err));
+            });
     }, []);
 
     // Get sports that don’t already have courts in this facility

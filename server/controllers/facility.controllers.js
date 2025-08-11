@@ -50,7 +50,7 @@ export const getFacilities = async (req, res, next) => {
             const facility = await Facility.findById(slug)
                 .populate('ownerId', 'username profilePic email')
                 .populate('courts', 'sportType')
-                
+
 
             if (!facility) {
                 return res.status(404).json({
@@ -118,6 +118,25 @@ export const getFacilities = async (req, res, next) => {
     }
 };
 
+export const getFacilitiesByUser = async (req, res, next) => {
+    try {
+        const userId = req.query.userId;
+
+        if (!userId) {
+            errorThrower(400, 'userId query parameter is required');
+        }
+
+        const facilities = await Facility.find({ ownerId: userId }).sort({ updatedAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            message: 'Facilities retrieved successfully',
+            facilities,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
 
 
 export const deleteFacility = async (req, res, next) => {
