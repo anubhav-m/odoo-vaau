@@ -1,223 +1,166 @@
-import { Button, Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PostCard from "../components/PostCard";
+import FacilityCard from "../components/FacilityCard";
 
 export default function Search() {
-  const [sidebarData, setSidebarData] = useState({
+  const [facilities, setFacilities] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const cardsPerPage = 8;
+
+  const [filters, setFilters] = useState({
     searchTerm: "",
-    sort: "desc",
-    category: null,
+    category: "",
   });
 
-  const [facilities, setFacilities] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const cardsPerPage = 4;
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const currentFacilities = facilities.slice(
+    currentPage * cardsPerPage,
+    currentPage * cardsPerPage + cardsPerPage
+  );
+
+  // Sync filters from URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    setFilters({
+      searchTerm: params.get("searchTerm") || "",
+      category: params.get("category") || "",
+    });
+  }, [location.search]);
+
+  // Fetch facilities whenever filters change
   useEffect(() => {
     const fetchFacilities = async () => {
       try {
-        const res = await fetch("/api/facility/getfacilities?status=approved");
-        if (!res.ok)
-          throw new Error(`Failed to fetch facilities: ${res.status}`);
+        const queryParams = new URLSearchParams();
+
+        if (filters.searchTerm.trim())
+          queryParams.set("searchTerm", filters.searchTerm.trim());
+
+        if (filters.category.trim())
+          queryParams.set("category", filters.category.trim());
+
+        navigate(`/search?${queryParams.toString()}`);
+
+        const res = await fetch(`/api/facility/getfacilities?${queryParams}`);
+        if (!res.ok) throw new Error("Failed to fetch facilities");
 
         const data = await res.json();
-
-        if (!data.success)
-          throw new Error(data.message || "Failed to fetch facilities");
-
-        setFacilities(data.facilities);
-      } catch (err) {
-        console.error("Error fetching facilities:", err);
+        setFacilities(data.facilities || []);
+        setCurrentPage(0);
+      } catch (error) {
+        console.error(error);
         setFacilities([]);
       }
     };
+
     fetchFacilities();
-  }, []);
-
-  console.log(sidebarData);
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [showMore, setShowMore] = useState(false);
-
-  const location = useLocation();
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get("searchTerm");
-    const sortFromUrl = urlParams.get("sort");
-    const categoryFromUrl = urlParams.get("category");
-    if (searchTermFromUrl || sortFromUrl || categoryFromUrl) {
-      setSidebarData({
-        ...sidebarData,
-        searchTerm: searchTermFromUrl,
-        sort: sortFromUrl,
-        category: categoryFromUrl,
-      });
-    }
-
-    const fetchPosts = async () => {
-      setLoading(true);
-      const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/post/getposts?${searchQuery}`);
-      if (!res.ok) {
-        setLoading(false);
-        return;
-      }
-      if (res.ok) {
-        const data = await res.json();
-        setPosts(data.posts);
-        setLoading(false);
-        if (data.posts.length === 9) {
-          setShowMore(true);
-        } else {
-          setShowMore(false);
-        }
-      }
-    };
-    fetchPosts();
-  }, [location.search]);
+  }, [filters, navigate]);
 
   const handleChange = (e) => {
-    if (e.target.id === "searchTerm") {
-      setSidebarData({ ...sidebarData, searchTerm: e.target.value });
-    }
-    if (e.target.id === "sort") {
-      const order = e.target.value || "desc";
-      setSidebarData({ ...sidebarData, sort: order });
-    }
-    if (e.target.id === "category") {
-      const category = e.target.value || null;
-      setSidebarData({ ...sidebarData, category });
+    const { id, value } = e.target;
+    setFilters((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const clearFilters = () => {
+    setFilters({ searchTerm: "", category: "" });
+    navigate("/search");
+  };
+
+  const nextSlide = () => {
+    if ((currentPage + 1) * cardsPerPage < facilities.length) {
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set("searchTerm", sidebarData.searchTerm);
-    urlParams.set("sort", sidebarData.sort);
-    if (sidebarData.category) {
-      urlParams.set("category", sidebarData.category);
-    } else {
-      urlParams.delete("category");
-    }
-
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
-  };
-
-  const handleShowMore = async () => {
-    const numberOfPosts = posts.length;
-    const startIndex = numberOfPosts;
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set("startIndex", startIndex);
-    const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/post/getposts?${searchQuery}`);
-    if (!res.ok) {
-      return;
-    }
-    if (res.ok) {
-      const data = await res.json();
-      setPosts([...posts, ...data.posts]);
-      if (data.posts.length === 9) {
-        setShowMore(true);
-      } else {
-        setShowMore(false);
-      }
+  const prevSlide = () => {
+    if (currentPage > 0) {
+      setCurrentPage((prev) => prev - 1);
     }
   };
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-7 border-b md:border-r md:min-h-screen border-gray-500">
-        <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-          <div className="flex   items-center gap-2">
-            <label className="whitespace-nowrap font-semibold">
-              Search Term:
-            </label>
-            <TextInput
-              placeholder="Search..."
+      {/* Sidebar */}
+      <div className="p-6 border-b md:border-r md:min-h-screen border-gray-500 w-full md:w-64 bg-black text-white">
+        <div className="flex flex-col gap-8">
+          {/* Search Input */}
+          <div>
+            <label className="block mb-2">Search by name or sport</label>
+            <input
               id="searchTerm"
               type="text"
-              value={sidebarData.searchTerm}
+              placeholder="Enter venue name or sport"
+              value={filters.searchTerm}
               onChange={handleChange}
+              className="w-full px-3 py-2 border border-white rounded-md bg-black text-white placeholder-gray-400 focus:outline-none focus:border-pink-500"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <label className="font-semibold">Sort:</label>
-            <Select onChange={handleChange} value={sidebarData.sort} id="sort">
-              <option value="desc">Latest</option>
-              <option value="asc">Oldest</option>
-            </Select>
-          </div>
-          <div className="flex items-center gap-2">
-            <label className="font-semibold">Category:</label>
-            <Select
-              onChange={handleChange}
-              value={sidebarData.category || ""}
+
+          {/* Sport Filter */}
+          <div>
+            <label className="block mb-2">Filter by sport type</label>
+            <select
               id="category"
+              value={filters.category}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-white rounded-md bg-black text-white focus:outline-none focus:border-pink-500"
             >
-              <option value="">No category</option>
-              <option value="uncategorized">Uncategorized</option>
-              <option value="reactjs">React.js</option>
-              <option value="nextjs">Next.js</option>
-              <option value="javascript">JavaScript</option>
-            </Select>
+              <option value="">All Sports</option>
+              <option value="football">Football</option>
+              <option value="basketball">Basketball</option>
+              <option value="cricket">Cricket</option>
+            </select>
           </div>
 
+          {/* Clear Filters */}
           <button
-            type="submit"
-            class="cursor-pointer relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
+            type="button"
+            onClick={clearFilters}
+            className="bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
           >
-            <span class="w-full relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
-              Apply Filters
-            </span>
+            Clear Filters
           </button>
-        </form>
+        </div>
       </div>
-      <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7">
-        {facilities.length > 0 && (
-          <div className="flex flex-col gap-6">
-            <h2 className="text-2xl font-semibold text-center">
-              Featured Facilities
-            </h2>
-            <div className="flex justify-end w-full">
-              <Link
-                to="/search"
-                className="mt-5 text-xs sm:text-sm font-bold text-teal-500 hover:underline"
-              >
-                See all venues
-              </Link>
+
+      {/* Cards */}
+      <div className="flex-1 p-4">
+        {facilities.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {currentFacilities.map((facility) => (
+                <FacilityCard key={facility._id} facility={facility} />
+              ))}
             </div>
 
-            <div className="flex gap-y-6 gap-x-2 justify-center">
-              {currentFacilities.map((facility) =>
-                facility && facility._id ? (
-                  <FacilityCard key={facility._id} facility={facility} />
-                ) : null
-              )}
-            </div>
-
+            {/* Pagination */}
             {facilities.length > cardsPerPage && (
               <div className="flex justify-center gap-4 mt-6">
                 <button
                   onClick={prevSlide}
-                  className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+                  disabled={currentPage === 0}
+                  className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
                 >
                   ←
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+                  disabled={
+                    (currentPage + 1) * cardsPerPage >= facilities.length
+                  }
+                  className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
                 >
                   →
                 </button>
               </div>
             )}
-          </div>
+          </>
+        ) : (
+          <p className="text-center mt-10 text-gray-500">
+            No facilities found.
+          </p>
         )}
       </div>
     </div>
