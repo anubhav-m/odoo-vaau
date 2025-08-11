@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import FacilityCard from "../components/FacilityCard";
 import TiltedCard from "../components/TiltedCard";
+import badminton from "../images/bd.jpg";
+import football from "../images/football.jpeg";
+import cricket from "../images/cricket.jpg";
+import swimming from "../images/swimming.jpg";
+import tennis from "../images/tennis.jpg";
+import tt from "../images/tabletennis.jpg";
 
 export default function Home() {
   const [facilities, setFacilities] = useState([]);
@@ -141,27 +147,34 @@ export default function Home() {
           </div>
         )}
       </div>
-      <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7">
-        <h2 className="text-2xl font-semibold">Popular Sports</h2>
-        <div className="flex flex-wrap gap-6 justify-center">
+      {/* Popular Sports Section */}
+      <div className="max-w-6xl mx-auto p-6 flex flex-col gap-8 py-10">
+        <h2 className="text-3xl font-extrabold text-center text-teal-500 tracking-wide">
+          Popular Sports
+        </h2>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
           {[
-            { name: "Badminton", image: "/images/badminton.jpg" },
-            { name: "Football", image: "/images/football.jpg" },
-            { name: "Cricket", image: "/images/cricket.jpg" },
-            { name: "Swimming", image: "/images/swimming.jpg" },
-            { name: "Tennis", image: "/images/tennis.jpg" },
-            { name: "Table Tennis", image: "/images/tabletennis.jpg" },
+            { name: "Badminton", image: badminton },
+            { name: "Football", image: football },
+            { name: "Cricket", image: cricket },
+            { name: "Swimming", image: swimming },
+            { name: "Tennis", image: tennis },
+            { name: "Table Tennis", image: tt },
           ].map((sport, index) => (
             <div
               key={index}
-              className="w-40 h-56 rounded-xl shadow-lg overflow-hidden bg-gray-100 dark:bg-gray-800 hover:scale-105 transition-transform cursor-pointer"
+              className="relative group w-full h-56 rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
             >
               <img
                 src={sport.image}
                 alt={sport.name}
-                className="w-full h-44 object-cover"
+                className="w-full h-full object-cover"
               />
-              <div className="p-2 text-center text-sm font-medium">
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+              {/* Sport Name */}
+              <div className="absolute bottom-0 w-full p-3 text-center text-white text-sm sm:text-base font-semibold tracking-wide">
                 {sport.name}
               </div>
             </div>
