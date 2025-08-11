@@ -34,7 +34,7 @@ export default function DashFacilities() {
 
         let res;
         if (currentUser.isAdmin) {
-          res = await fetch(`/api/facility/getFacilities`);
+          res = await fetch(`/api/facility/getfacilities`);
         } else {
           res = await fetch(
             `/api/facility/getFacilities?userId=${currentUser._id}`
@@ -42,7 +42,6 @@ export default function DashFacilities() {
         }
 
         const data = await res.json();
-
         if (!data.success) {
           throw new Error("Error fetching facilities");
         }
@@ -115,14 +114,16 @@ export default function DashFacilities() {
         <>
           <Table hoverable className="shadow-md">
             <TableHead>
-              <TableHeadCell>Date updated</TableHeadCell>
-              <TableHeadCell>Username</TableHeadCell>
-              <TableHeadCell>Facility image</TableHeadCell>
-              <TableHeadCell>Name</TableHeadCell>
-              <TableHeadCell>Sports</TableHeadCell>
-              <TableHeadCell>Amenities</TableHeadCell>
-              <TableHeadCell>Edit</TableHeadCell>
-              <TableHeadCell>Delete</TableHeadCell>
+              <TableRow>
+                <TableHeadCell>Date updated</TableHeadCell>
+                {currentUser.isAdmin && <TableHeadCell>Username</TableHeadCell>}
+                <TableHeadCell>Facility image</TableHeadCell>
+                <TableHeadCell>Name</TableHeadCell>
+                <TableHeadCell>Sports</TableHeadCell>
+                <TableHeadCell>Amenities</TableHeadCell>
+                <TableHeadCell>Edit</TableHeadCell>
+                <TableHeadCell>Delete</TableHeadCell>
+              </TableRow>
             </TableHead>
 
             <TableBody className="divide-y">
@@ -131,7 +132,8 @@ export default function DashFacilities() {
                 .filter((facility) =>
                   currentUser.isAdmin
                     ? true
-                    : facility.ownerId === currentUser._id
+                    : (facility.ownerId?._id ?? facility.ownerId).toString() ===
+                      currentUser._id.toString()
                 )
                 .map((facility) => (
                   <TableRow
@@ -141,6 +143,12 @@ export default function DashFacilities() {
                     <TableCell>
                       {new Date(facility.updatedAt).toLocaleDateString()}
                     </TableCell>
+
+                    {currentUser.isAdmin && (
+                      <TableCell>
+                        {facility.ownerId?.username || "Unknown"}
+                      </TableCell>
+                    )}
 
                     <TableCell>
                       <Link to={`/facility/${facility._id}`}>
