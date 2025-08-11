@@ -112,8 +112,10 @@ export default function AdminDashboard() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
-          <h2 className="text-lg font-semibold mb-2">Total Users</h2>
-          <p className="text-2xl font-bold">{stats.totalUsers ?? 0}</p>
+          <Link to="?tab=users">
+            <h2 className="text-lg font-semibold mb-2">Total Users</h2>
+            <p className="text-2xl font-bold">{stats.totalUsers ?? 0}</p>
+          </Link>
         </Card>
         <Card>
           <h2 className="text-lg font-semibold mb-2">New Users This Month</h2>

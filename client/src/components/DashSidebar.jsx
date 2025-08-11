@@ -79,17 +79,18 @@ export default function DashSidebar() {
             </SidebarItem>
           </Link>
 
-          {currentUser && currentUser.isFacilityOwner && (
-            <Link to="/dashboard?tab=facilities">
-              <SidebarItem
-                active={tab === "facilities"}
-                icon={HiDocumentText}
-                as="div"
-              >
-                Facilities
-              </SidebarItem>
-            </Link>
-          )}
+          {currentUser &&
+            (currentUser.isFacilityOwner || currentUser.isAdmin) && (
+              <Link to="/dashboard?tab=facilities">
+                <SidebarItem
+                  active={tab === "facilities"}
+                  icon={HiDocumentText}
+                  as="div"
+                >
+                  Facilities
+                </SidebarItem>
+              </Link>
+            )}
 
           {currentUser && currentUser.isFacilityOwner && (
             <Link to="/dashboard?tab=courts">
@@ -122,7 +123,7 @@ export default function DashSidebar() {
                 icon={HiAnnotation}
                 as="div"
               >
-                Comments
+                Feedback
               </SidebarItem>
             </Link>
           )}
