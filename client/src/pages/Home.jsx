@@ -30,8 +30,27 @@ export default function Home() {
     return (
         <div className="flex-1">
             <div className="flex flex-col gap-6 p-4 lg:p-24 max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold lg:text-6xl">Welcome to NodeNotion</h1>
-                <p className="text-gray-500 text-xs sm:text-sm">Here you'll find a variety of articles and tutorials on topics such as web development, programming languages, software engineering, and more.</p>
+                <div className="w-full flex">
+                    {/* Right-aligned container */}
+                    <div className="w-full sm:w-1/2 ml-auto min-h-[400px] rounded-2xl shadow-lg border-4 border-teal-500 bg-gray-200 dark:bg-gray-800 flex flex-col justify-center items-center text-gray-800 dark:text-gray-200 p-8 transition-transform duration-300 hover:scale-105">
+                    
+                    {/* Heading */}
+                    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-center leading-tight tracking-wide">
+                        Welcome to <span className="text-teal-500 drop-shadow-md">QuickCourt</span>
+                    </h1>
+
+                    {/* Paragraph */}
+                    <p className="text-sm sm:text-base mt-6 text-center leading-relaxed max-w-md opacity-90">
+                        Here you can quickly find and book local sports courts, join matches, 
+                        and connect with fellow sports enthusiasts in your area.
+                    </p>
+                </div>
+            </div>
+
+
+
+
+
                 <Link to='/search' className='mt-5 text-xs sm:text-sm text-teal-500 font-bold hover:underline'>
                     View all posts
                 </Link>
