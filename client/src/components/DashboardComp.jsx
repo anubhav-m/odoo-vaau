@@ -56,16 +56,36 @@ export default function AdminDashboard() {
     fetchStats();
   }, []);
 
-  // Dummy data for chart - replace with real stats if you have time series
+  // Dummy data for booking chart
   const bookingData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
         label: "Bookings",
-        data: [5, 8, 12, 9, 14, 20], // You can replace with dynamic data if available
+        data: [5, 8, 12, 9, 14, 20],
         borderColor: "rgb(75, 192, 192)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
       },
+    ],
+  };
+
+  // New dummy data for registration and sports activities chart
+  const activityData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    datasets: [
+      {
+        label: "Registrations",
+        data: [10, 15, 20, 18, 22, 30],
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+      },
+      {
+        label: "Sports Activities",
+        data: [3, 5, 7, 6, 8, 12],
+        borderColor: "rgb(54, 162, 235)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+      },
+      // You can add more datasets here if needed
     ],
   };
 
@@ -127,6 +147,14 @@ export default function AdminDashboard() {
           Booking Activity Over Time
         </h2>
         <Line data={bookingData} />
+      </div>
+
+      {/* New Registrations and Sports Activities Chart */}
+      <div className="bg-white p-5 rounded-lg shadow-md mb-8">
+        <h2 className="text-lg font-semibold mb-4">
+          Registrations & Sports Activities Over Time
+        </h2>
+        <Line data={activityData} />
       </div>
 
       {/* Quick Actions */}
