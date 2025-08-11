@@ -108,17 +108,19 @@ export default function Home() {
       <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7">
         {facilities.length > 0 && (
           <div className="flex flex-col gap-6">
-            <h2 className="text-2xl font-semibold text-center">
-              Featured Facilities
+            <div className="flex justify-between items-center w-full">
+            <h2 className="text-3xl font-extrabold 
+              text-teal-700 dark:text-teal-300 tracking-widest drop-shadow-sm">
+              Book Venues
             </h2>
-            <div className="flex justify-end w-full">
-              <Link
-                to="/search"
-                className="mt-5 text-xs sm:text-sm font-bold text-teal-500 hover:underline"
-              >
-                See all venues
-              </Link>
-            </div>
+            <Link
+              to="/search"
+              className="text-xs sm:text-sm font-bold text-teal-500 hover:underline"
+            >
+              See all venues
+            </Link>
+          </div>
+
 
             <div className="flex gap-y-6 gap-x-2 justify-center">
               {currentFacilities.map((facility) =>
