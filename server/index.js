@@ -9,6 +9,7 @@ import { userRouter } from './routes/user.routes.js'
 import { facilityRouter } from './routes/facility.routes.js'
 import { commentRouter } from './routes/comment.routes.js'
 import { courtRouter } from './routes/court.routes.js'
+import { adminRouter } from './routes/admin.route.js'
 
 const app = express();
 
@@ -22,23 +23,23 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/facility', facilityRouter);
 app.use('/api/comment', commentRouter);
-app.use('/api/court', courtRouter)
+app.use('/api/court', courtRouter);
+app.use("/api/admin", adminRouter);
 
 app.use(errorMiddleware);
 
-app.get('/', (req, res) => {
-    res.send('Welcome to NodeNotion api')
+app.get("/", (req, res) => {
+  res.send("Welcome to NodeNotion api");
 });
 
 (async () => {
-    try {
-        await connectToDB();
+  try {
+    await connectToDB();
 
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT} in ${NODE_ENV} mode`);
-        });
-    }
-    catch (err) {
-        console.error(`Failed to start server: ${err.message}`);
-    }
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT} in ${NODE_ENV} mode`);
+    });
+  } catch (err) {
+    console.error(`Failed to start server: ${err.message}`);
+  }
 })();
