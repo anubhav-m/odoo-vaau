@@ -37,6 +37,11 @@ const facilitySchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'approved', 'rejected'],
         default: 'pending'
+    },
+    courts:
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Court'
     }
 }, { timestamps: true });
 

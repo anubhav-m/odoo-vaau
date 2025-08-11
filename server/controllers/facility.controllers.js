@@ -48,7 +48,9 @@ export const getFacilities = async (req, res, next) => {
         // If slug is passed, fetch a single facility by slug
         if (slug) {
             const facility = await Facility.findById(slug)
-                .populate('ownerId', 'username profilePic email');
+                .populate('ownerId', 'username profilePic email')
+                .populate('courts', 'sportType')
+                
 
             if (!facility) {
                 return res.status(404).json({
@@ -84,6 +86,7 @@ export const getFacilities = async (req, res, next) => {
 
         const facilities = await Facility.find(query)
             .populate('ownerId', 'username profilePic email')
+            .populate('courts', 'sportType')
             .sort({ updatedAt: sortDirection })
             .skip(startIndex)
             .limit(limit);

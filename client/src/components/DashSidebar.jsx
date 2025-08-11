@@ -63,6 +63,13 @@ export default function DashSidebar() {
                         </Link>
                     }
 
+                       {
+                        currentUser && currentUser.isFacilityOwner &&
+                        <Link to='/dashboard?tab=courts'>
+                            <SidebarItem active={tab === 'courts'} icon={HiDocumentText} as='div'>Courts</SidebarItem>
+                        </Link>
+                    }
+
                     {
                         currentUser && currentUser.isAdmin &&
                         <Link to='/dashboard?tab=users'>

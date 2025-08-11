@@ -15,6 +15,9 @@ import ResetOnNavigate from "./components/ResetOnNavigate";
 import FacilityPage from './pages/FacilityPage.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import Search from './pages/Search.jsx'
+import CreateCourt from './pages/CreateCourt.jsx'
+import CourtPage from './pages/CourtPage.jsx'
+import UpdateCourt from './pages/UpdateCourt.jsx'
 
 
 export default function App() {
@@ -34,9 +37,14 @@ export default function App() {
 							<Route path='/dashboard' element={<Dashboard />}></Route>
 						</Route>
 						<Route path='/projects' element={<Projects />}></Route>
+						
 						<Route path='/facility/:facilitySlug' element={<FacilityPage />}></Route>
 						<Route path='/create-facility' element={<CreateFacility />}></Route>
 						<Route path='/update-facility/:facilitySlug' element={<UpdateFacility />}></Route>
+						
+						<Route path='/court/:courtSlug' element={<CourtPage />}></Route>
+						<Route path='/create-court' element={<CreateCourt />}></Route>
+						<Route path='/update-court/:courtSlug' element={<UpdateCourt />}></Route>
 						{/* <Route element={<OnlyAdminPrivateRoute />}>
 							
 						</Route> */}
