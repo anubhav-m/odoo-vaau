@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import FacilityCard from "../components/FacilityCard"; // Make sure this exists
+import FacilityCard from "../components/FacilityCard";
 import TiltedCard from "../components/TiltedCard";
 
 export default function Home() {
   const [facilities, setFacilities] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const cardsPerPage = 4; // Number of cards visible at once
 
   useEffect(() => {
     const fetchFacilities = async () => {
@@ -27,11 +29,32 @@ export default function Home() {
     fetchFacilities();
   }, []);
 
+  // Navigation
+  const nextSlide = () => {
+    setCurrentIndex((prev) =>
+      prev + cardsPerPage < facilities.length ? prev + cardsPerPage : 0
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) =>
+      prev - cardsPerPage >= 0
+        ? prev - cardsPerPage
+        : facilities.length - cardsPerPage
+    );
+  };
+
+  const currentFacilities = facilities.slice(
+    currentIndex,
+    currentIndex + cardsPerPage
+  );
+
   return (
     <div className="flex-1">
+      {/* Top Section */}
       <div className="flex flex-col gap-6 p-4 lg:p-24 max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row gap-6 justify-center my-10">
-          {/* Left Section */}
+          {/* Left Card */}
           <div className="w-full sm:w-1/2 flex justify-center items-center">
             <TiltedCard
               containerHeight="300px"
@@ -63,7 +86,7 @@ export default function Home() {
             />
           </div>
 
-          {/* Right Section */}
+          {/* Right Info Section */}
           <div
             className="w-full sm:w-1/2 min-h-[400px] rounded-2xl shadow-lg border-4 border-teal-500 
                        bg-gray-200 dark:bg-gray-800 flex-col justify-center items-center 
@@ -89,21 +112,40 @@ export default function Home() {
               Featured Facilities
             </h2>
             <div className="flex justify-end w-full">
-            <Link
-              to="/facilities"
-              className="mt-5 text-xs sm:text-sm font-bold text-teal-500 hover:underline"
-            >
-              See all venues
-            </Link>
+              <Link
+                to="/facilities"
+                className="mt-5 text-xs sm:text-sm font-bold text-teal-500 hover:underline"
+              >
+                See all venues
+              </Link>
             </div>
-            
-            <div className="flex flex-wrap gap-y-6 gap-x-2 justify-center">
-              {facilities.map((facility) =>
+
+            {/* Cards */}
+            <div className="flex max-h-5flex-wrap gap-y-6 gap-x-2 justify-center">
+              {currentFacilities.map((facility) =>
                 facility && facility._id ? (
                   <FacilityCard key={facility._id} facility={facility} />
                 ) : null
               )}
             </div>
+
+            {/* Carousel Arrows */}
+            {facilities.length > cardsPerPage && (
+              <div className="flex justify-center gap-4 mt-6">
+                <button
+                  onClick={prevSlide}
+                  className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+                >
+                  ←
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+                >
+                  →
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
