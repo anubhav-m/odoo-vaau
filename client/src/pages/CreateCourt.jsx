@@ -36,6 +36,41 @@ export default function CreateCourt() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Basic validations
+        if (!selectedFacility) {
+            alert("Please select a facility.");
+            return;
+        }
+
+        if (!selectedSport) {
+            alert("Please select a sport.");
+            return;
+        }
+
+        const trimmedName = courtName.trim();
+        if (!trimmedName) {
+            alert("Please enter a valid court name.");
+            return;
+        }
+
+        const priceNum = Number(pricePerHour);
+        if (isNaN(priceNum) || priceNum <= 0) {
+            alert("Please enter a valid positive price per hour.");
+            return;
+        }
+
+        if (!startTime || !endTime) {
+            alert("Please select both start and end times.");
+            return;
+        }
+
+        // Check time order
+        if (startTime >= endTime) {
+            alert("End time must be later than start time.");
+            return;
+        }
+
         const payload = {
             facilityId: selectedFacility,
             name: courtName.trim(),
@@ -72,7 +107,7 @@ export default function CreateCourt() {
     );
 
     return (
-        <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+        <div className="mt-20 w-[85%] mx-6 self-center sm:max-w-xl p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200">
                 Create Court
             </h2>
@@ -80,7 +115,7 @@ export default function CreateCourt() {
             <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Facility Selection */}
                 <div>
-                    <Label htmlFor="facility" value="Select Facility" />
+                    <Label htmlFor="facility">Select Facility</Label>
                     <Select
                         id="facility"
                         value={selectedFacility}
@@ -102,7 +137,7 @@ export default function CreateCourt() {
                 {/* Sport Type Selection */}
                 {selectedFacility && (
                     <div>
-                        <Label htmlFor="sport" value="Sport Type" />
+                        <Label htmlFor="sport">Sport Type</Label>
                         <Select
                             id="sport"
                             value={selectedSport}
@@ -125,7 +160,7 @@ export default function CreateCourt() {
 
                 {/* Court Name */}
                 <div>
-                    <Label htmlFor="courtName" value="Court Name" />
+                    <Label htmlFor="courtName">Court Name</Label>
                     <TextInput
                         id="courtName"
                         type="text"
@@ -138,11 +173,12 @@ export default function CreateCourt() {
 
                 {/* Pricing */}
                 <div>
-                    <Label htmlFor="price" value="Pricing Per Hour (₹)" />
+                    <Label htmlFor="price">Pricing Per Hour (₹)</Label>
                     <TextInput
                         id="price"
                         type="number"
                         min="0"
+                        step="500"
                         value={pricePerHour}
                         onChange={(e) => setPricePerHour(e.target.value)}
                         required
@@ -152,7 +188,7 @@ export default function CreateCourt() {
                 {/* Operating Hours */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <Label htmlFor="start" value="Start Time" />
+                        <Label htmlFor="start">Start Time</Label>
                         <Select
                             id="start"
                             value={startTime}
@@ -168,7 +204,7 @@ export default function CreateCourt() {
                         </Select>
                     </div>
                     <div>
-                        <Label htmlFor="end" value="End Time" />
+                        <Label htmlFor="end">End Time</Label>
                         <Select
                             id="end"
                             value={endTime}
@@ -186,7 +222,7 @@ export default function CreateCourt() {
                 </div>
 
                 {/* Submit */}
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="cursor-pointer w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-l focus:ring-purple-200 dark:focus:ring-purple-800">
                     Create Court
                 </Button>
             </form>
