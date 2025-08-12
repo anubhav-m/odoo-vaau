@@ -51,7 +51,7 @@ const Booking = () => {
       <div className="bg-blue-200 dark:bg-gray-800 rounded-lg p-5 transition-colors">
         <h2 className="mb-2 font-semibold">SBR Badminton</h2>
         <p className="text-sm mb-4">
-          📍 Gandhinagar, Gujarat &nbsp;⭐ 4.5 (6)
+          📍 Vaisnodevi Cir &nbsp;⭐ 4.5 (6)
         </p>
 
         <div className="mb-4">
