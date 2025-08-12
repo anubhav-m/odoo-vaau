@@ -18,6 +18,7 @@ import Search from './pages/Search.jsx'
 import CreateCourt from './pages/CreateCourt.jsx'
 import CourtPage from './pages/CourtPage.jsx'
 import UpdateCourt from './pages/UpdateCourt.jsx'
+import Booking from './pages/Booking.jsx'
 
 
 export default function App() {
@@ -45,6 +46,8 @@ export default function App() {
 						<Route path='/court/:courtSlug' element={<CourtPage />}></Route>
 						<Route path='/create-court' element={<CreateCourt />}></Route>
 						<Route path='/update-court/:courtSlug' element={<UpdateCourt />}></Route>
+
+						<Route path='/booking' element={<Booking />}></Route>
 						{/* <Route element={<OnlyAdminPrivateRoute />}>
 							
 						</Route> */}
