@@ -47,7 +47,7 @@ export default function App() {
 						<Route path='/create-court' element={<CreateCourt />}></Route>
 						<Route path='/update-court/:courtSlug' element={<UpdateCourt />}></Route>
 
-						<Route path='/booking' element={<Booking />}></Route>
+						<Route path='/create-booking' element={<Booking/>}></Route>
 						{/* <Route element={<OnlyAdminPrivateRoute />}>
 							
 						</Route> */}

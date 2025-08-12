@@ -26,9 +26,9 @@ const Booking = () => {
   const totalPrice = duration * pricePerHour;
 
   return (
-  <div className="max-w-3xl mx-auto mt-8 p-6 rounded-lg font-mono
-                  bg-blue-100 text-blue-900
-                  dark:bg-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
+    <div className="w-full max-w-4xl mx-auto mt-8 p-6 rounded-lg font-mono
+                bg-blue-100 text-blue-900
+                dark:bg-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
 
       <header className="flex justify-between items-center mb-6 bg-blue-300 dark:bg-gray-700 p-4 rounded-md">
         <div className="font-bold text-lg">QUICKCOURT</div>
@@ -42,7 +42,7 @@ const Booking = () => {
 
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-gray-400 dark:bg-gray-500"></div>
-          Mitchell Admin
+          User
         </div>
       </header>
 
@@ -51,7 +51,7 @@ const Booking = () => {
       <div className="bg-blue-200 dark:bg-gray-800 rounded-lg p-5 transition-colors">
         <h2 className="mb-2 font-semibold">SBR Badminton</h2>
         <p className="text-sm mb-4">
-          📍 Satellite, Jodhpur Village &nbsp;⭐ 4.5 (6)
+          📍 Gandhinagar, Gujarat &nbsp;⭐ 4.5 (6)
         </p>
 
         <div className="mb-4">
