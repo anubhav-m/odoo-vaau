@@ -119,22 +119,6 @@ export default function Search() {
             />
           </div>
 
-          {/* Sport Filter
-          <div>
-            <label className="block mb-2">Filter by sport type</label>
-            <select
-              id="sport"
-              value={filters.sport}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-white rounded-md bg-black text-white focus:outline-none focus:border-pink-500"
-            >
-              <option value="">All Sports</option>
-              <option value="football">Football</option>
-              <option value="basketball">Basketball</option>
-              <option value="cricket">Cricket</option>
-            </select>
-          </div> */}
-
           {/* Clear Filters */}
           <button
             type="button"
