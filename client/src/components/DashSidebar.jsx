@@ -127,6 +127,19 @@ export default function DashSidebar() {
               </SidebarItem>
             </Link>
           )}
+
+          {currentUser && (
+            <Link to="/dashboard?tab=bookings">
+              <SidebarItem
+                active={tab === "bookings"}
+                icon={HiDocumentText}
+                as="div"
+              >
+                Bookings
+              </SidebarItem>
+            </Link>
+          )}
+
         </SidebarItemGroup>
 
         <SidebarItemGroup>

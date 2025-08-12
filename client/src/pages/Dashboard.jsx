@@ -7,6 +7,7 @@ import DashComp from '../components/DashboardComp.jsx';
 import DashComments from '../components/DashComments.jsx';
 import DashFacilities from '../components/DashFacilities.jsx';
 import DashCourts from '../components/DashCourts.jsx';
+import DashBooking from '../components/DashBooking.jsx';
 
 export default function Dashboard() {
     const location = useLocation();
@@ -38,6 +39,8 @@ export default function Dashboard() {
                 {tab === 'courts' && <DashCourts />}
                 {/* Comments ...*/}
                 {tab === 'comments' && <DashComments />}
+                {/* Booking ...*/}
+                {tab === 'bookings' && <DashBooking/>}
             </div>
 
         </div>
