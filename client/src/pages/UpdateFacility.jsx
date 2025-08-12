@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import { Badge } from "flowbite-react";
+import { Badge, TextInput, Button, Textarea, Alert } from "flowbite-react";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
+import {
+  HiOutlineLocationMarker,
+  HiOutlineClipboardList,
+  HiOutlineTicket,
+  HiPhotograph,
+  HiOutlineDocumentText,
+} from "react-icons/hi";
 
 export default function UpdateFacilityPage() {
   const { facilitySlug } = useParams();
@@ -21,13 +28,10 @@ export default function UpdateFacilityPage() {
   const [images, setImages] = useState([]);
   const [newImage, setNewImage] = useState("");
 
-  // Fetch facility function to reuse
   const fetchFacility = async () => {
     try {
       setLoading(true);
-      const res = await fetch(
-        `/api/facility/getfacilities?slug=${facilitySlug}`
-      );
+      const res = await fetch(`/api/facility/getfacilities?slug=${facilitySlug}`);
       const data = await res.json();
 
       if (!data.success) throw new Error("Cannot fetch this facility");
@@ -48,12 +52,10 @@ export default function UpdateFacilityPage() {
     }
   };
 
-  // Initial fetch on component mount or when slug changes
   useEffect(() => {
     fetchFacility();
   }, [facilitySlug]);
 
-  // Auto carousel for images
   useEffect(() => {
     if (images && images.length > 0) {
       const interval = setInterval(() => {
@@ -92,11 +94,7 @@ export default function UpdateFacilityPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Update failed");
 
-      // Refetch updated facility data to sync local state
       await fetchFacility();
-
-      // Optional: navigate back to facility details page after update
-      // navigate(`/facility/${facilitySlug}`);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -105,159 +103,190 @@ export default function UpdateFacilityPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col p-3">
-      {loading ? (
-        <div className="m-auto">
-          <HashLoader color="aqua" size={50} loading={loading} />
-        </div>
-      ) : error ? (
-        <div className="text-center text-red-500">{error}</div>
-      ) : (
-        facility && (
-          <>
-            {/* Facility Name */}
-            <input
-              type="text"
-              className="text-3xl m-6 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl border rounded"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-900 dark:to-gray-950 px-4 py-10">
+      <div className="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-100 dark:border-gray-700">
+        {loading ? (
+          <div className="m-auto flex justify-center">
+            <HashLoader color="aqua" size={50} loading={loading} />
+          </div>
+        ) : error ? (
+          <Alert color="failure" className="mb-6">
+            {error}
+          </Alert>
+        ) : (
+          facility && (
+            <>
+              {/* Facility Name */}
+              <div className="relative mb-6">
+                <HiOutlineClipboardList className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-500 dark:text-purple-400 text-xl" />
+                <TextInput
+                  placeholder="Facility Name"
+                  required
+                  shadow
+                  className="pl-10"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
 
-            {/* Location */}
-            <input
-              type="text"
-              className="text-center text-gray-500 border p-2 rounded mx-auto"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
+              {/* Location */}
+              <div className="relative mb-6">
+                <HiOutlineLocationMarker className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-500 dark:text-purple-400 text-xl" />
+                <TextInput
+                  placeholder="Location"
+                  required
+                  shadow
+                  className="pl-10"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </div>
 
-            {/* Sports */}
-            <div className="flex justify-center gap-2 my-3">
-              {sports.map((sport, idx) => (
-                <Badge key={idx} color="info">
-                  {sport}
-                </Badge>
-              ))}
-            </div>
-            <input
-              type="text"
-              className="border p-2 rounded mx-auto"
-              value={sports.join(", ")}
-              onChange={(e) =>
-                setSports(e.target.value.split(",").map((s) => s.trim()))
-              }
-            />
-
-            {/* Amenities */}
-            <div className="flex justify-center gap-2 flex-wrap my-3">
-              {amenities.map((amenity, idx) => (
-                <Badge key={idx} color="success">
-                  {amenity}
-                </Badge>
-              ))}
-            </div>
-            <input
-              type="text"
-              className="border p-2 rounded mx-auto"
-              value={amenities.join(", ")}
-              onChange={(e) =>
-                setAmenities(e.target.value.split(",").map((a) => a.trim()))
-              }
-            />
-
-            {/* Carousel */}
-            <div className="self-center max-w-5xl p-3 w-full">
-              {Array.isArray(images) && images.length > 0 ? (
-                <div className="relative h-56 sm:h-64 xl:h-80 2xl:h-96 w-full overflow-hidden rounded-lg shadow">
-                  {images.map((photo, idx) => (
-                    <img
-                      key={idx}
-                      src={photo}
-                      alt={`${name} ${idx + 1}`}
-                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
-                        idx === currentIndex ? "opacity-100" : "opacity-0"
-                      }`}
-                    />
+              {/* Sports */}
+              <div className="mb-4">
+                <label className="flex items-center mb-2 font-semibold text-gray-700 dark:text-gray-200">
+                  <HiOutlineClipboardList className="mr-2 text-purple-500 dark:text-purple-400 text-xl" />
+                  Sports Supported
+                </label>
+                <div className="flex flex-wrap gap-3 mb-2">
+                  {sports.map((sport, idx) => (
+                    <Badge key={idx} color="purple">
+                      {sport}
+                    </Badge>
                   ))}
+                </div>
+                <TextInput
+                  placeholder="Comma separated sports"
+                  value={sports.join(", ")}
+                  onChange={(e) =>
+                    setSports(e.target.value.split(",").map((s) => s.trim()))
+                  }
+                />
+              </div>
 
-                  {/* Prev button */}
-                  <button
-                    onClick={() =>
-                      setCurrentIndex(
-                        (prev) => (prev - 1 + images.length) % images.length
-                      )
-                    }
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black rounded-full p-2 shadow-lg hover:bg-gray-300 transition"
-                  >
-                    <FaArrowCircleLeft size={32} />
-                  </button>
+              {/* Amenities */}
+              <div className="mb-4">
+                <label className="flex items-center mb-2 font-semibold text-gray-700 dark:text-gray-200">
+                  <HiOutlineTicket className="mr-2 text-indigo-500 dark:text-indigo-400 text-xl" />
+                  Amenities Offered
+                </label>
+                <div className="flex flex-wrap gap-3 mb-2">
+                  {amenities.map((amenity, idx) => (
+                    <Badge key={idx} color="indigo">
+                      {amenity}
+                    </Badge>
+                  ))}
+                </div>
+                <TextInput
+                  placeholder="Comma separated amenities"
+                  value={amenities.join(", ")}
+                  onChange={(e) =>
+                    setAmenities(e.target.value.split(",").map((a) => a.trim()))
+                  }
+                />
+              </div>
 
-                  {/* Next button */}
-                  <button
-                    onClick={() =>
-                      setCurrentIndex((prev) => (prev + 1) % images.length)
-                    }
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black rounded-full p-2 shadow-lg hover:bg-gray-300 transition"
-                  >
-                    <FaArrowCircleRight size={32} />
-                  </button>
+              {/* Carousel */}
+              <div className="mb-6">
+                <label className="flex items-center mb-2 font-semibold text-purple-600 dark:text-purple-400">
+                  <HiPhotograph className="mr-2 text-purple-600 dark:text-purple-400 text-xl" />
+                  Facility Images
+                </label>
 
-                  {/* Dots */}
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                    {images.map((_, idx) => (
-                      <button
+                {Array.isArray(images) && images.length > 0 ? (
+                  <div className="relative h-56 sm:h-64 xl:h-80 2xl:h-96 w-full overflow-hidden rounded-lg shadow">
+                    {images.map((photo, idx) => (
+                      <img
                         key={idx}
-                        onClick={() => setCurrentIndex(idx)}
-                        className={`w-3 h-3 rounded-full ${
-                          idx === currentIndex ? "bg-white" : "bg-gray-400"
+                        src={photo}
+                        alt={`${name} ${idx + 1}`}
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                          idx === currentIndex ? "opacity-100" : "opacity-0"
                         }`}
                       />
                     ))}
+
+                    <button
+                      onClick={() =>
+                        setCurrentIndex(
+                          (prev) => (prev - 1 + images.length) % images.length
+                        )
+                      }
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black rounded-full p-2 shadow-lg hover:bg-gray-300 transition"
+                      aria-label="Previous Image"
+                    >
+                      <FaArrowCircleLeft size={32} />
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        setCurrentIndex((prev) => (prev + 1) % images.length)
+                      }
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black rounded-full p-2 shadow-lg hover:bg-gray-300 transition"
+                      aria-label="Next Image"
+                    >
+                      <FaArrowCircleRight size={32} />
+                    </button>
+
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                      {images.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentIndex(idx)}
+                          className={`w-3 h-3 rounded-full ${
+                            idx === currentIndex ? "bg-white" : "bg-gray-400"
+                          }`}
+                          aria-label={`Go to image ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
                   </div>
+                ) : (
+                  <p className="text-center text-gray-400">No images available</p>
+                )}
+
+                {/* Add image */}
+                <div className="flex gap-2 mt-3">
+                  <TextInput
+                    placeholder="New image URL"
+                    value={newImage}
+                    onChange={(e) => setNewImage(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button color="blue" onClick={addImage}>
+                    Add
+                  </Button>
                 </div>
-              ) : (
-                <p className="text-center text-gray-400">No images available</p>
-              )}
-
-              {/* Add image */}
-              <div className="flex gap-2 mt-3">
-                <input
-                  type="text"
-                  placeholder="New image URL"
-                  className="border p-2 rounded flex-1"
-                  value={newImage}
-                  onChange={(e) => setNewImage(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                  onClick={addImage}
-                >
-                  Add
-                </button>
               </div>
-            </div>
 
-            {/* Description */}
-            <textarea
-              className="p-2 max-w-2xl mx-auto w-full my-7 border rounded"
-              rows={6}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+              {/* Description */}
+              <div className="mb-6">
+                <label className="flex items-center mb-2 font-semibold text-gray-700 dark:text-gray-200">
+                  <HiOutlineDocumentText className="mr-2 text-purple-500 dark:text-purple-400 text-xl" />
+                  Description
+                </label>
+                <Textarea
+                  rows={6}
+                  placeholder="Facility description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
 
-            {/* Update button */}
-            <div className="flex justify-center my-5">
-              <button
-                onClick={handleUpdate}
-                className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700"
-              >
-                Update Facility
-              </button>
-            </div>
-          </>
-        )
-      )}
+              {/* Update Button */}
+              <div className="flex justify-center">
+                <Button
+                  color="success"
+                  onClick={handleUpdate}
+                  className="purple shadow-lg hover:scale-[1.02] transition"
+                >
+                  Update Facility
+                </Button>
+              </div>
+            </>
+          )
+        )}
+      </div>
     </div>
   );
 }
