@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
 import { Badge, Carousel } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 
 export default function FacilityPage() {
   const { facilitySlug } = useParams();
@@ -9,6 +10,8 @@ export default function FacilityPage() {
   const [error, setError] = useState(null);
   const [facility, setFacility] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedCourtId, setSelectedCourtId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (facility && facility.images && facility.images.length > 0) {
@@ -18,6 +21,13 @@ export default function FacilityPage() {
       return () => clearInterval(interval);
     }
   }, [facility?.images]);
+
+  useEffect(() => {
+    // after facility loads, if courts exist select first one by default
+    if (facility?.courts?.length > 0) {
+      setSelectedCourtId(facility.courts[0]._id);
+    }
+  }, [facility]);
 
   useEffect(() => {
     const fetchFacility = async () => {
@@ -80,6 +90,13 @@ export default function FacilityPage() {
               ))}
             </div>
 
+            <button
+              onClick={() => navigate("/create-booking")}
+              className="mt-6 px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 max-w-xs mx-auto"
+            >
+              Create Booking
+            </button>
+
             {/* Photos Carousel */}
             <div className="self-center max-w-5xl p-3 w-full">
               {Array.isArray(facility.images) && facility.images.length > 0 ? (
@@ -89,9 +106,8 @@ export default function FacilityPage() {
                       key={idx}
                       src={photo}
                       alt={`${facility.name} ${idx + 1}`}
-                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
-                        idx === currentIndex ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${idx === currentIndex ? "opacity-100" : "opacity-0"
+                        }`}
                     />
                   ))}
 
@@ -127,9 +143,8 @@ export default function FacilityPage() {
                       <button
                         key={idx}
                         onClick={() => setCurrentIndex(idx)}
-                        className={`w-3 h-3 rounded-full ${
-                          idx === currentIndex ? "bg-white" : "bg-gray-400"
-                        }`}
+                        className={`w-3 h-3 rounded-full ${idx === currentIndex ? "bg-white" : "bg-gray-400"
+                          }`}
                       />
                     ))}
                   </div>
